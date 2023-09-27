@@ -40,7 +40,7 @@ func (o *OBS) Close() error {
 func (o *OBS) PutObject(objName string, reader io.Reader) error {
 	input := &obs.PutObjectInput{}
 	input.Bucket = o.Bucket
-	input.Key = objName
+	input.Key = o.SubDir + objName
 	input.Body = reader
 
 	_, err := o.Client.PutObject(input)
@@ -54,7 +54,7 @@ func (o *OBS) PutObject(objName string, reader io.Reader) error {
 func (o *OBS) GetObject(objName string) (io.ReadCloser, error) {
 	input := &obs.GetObjectInput{}
 	input.Bucket = o.Bucket
-	input.Key = objName
+	input.Key = o.SubDir + objName
 
 	output, err := o.Client.GetObject(input)
 	if err != nil {

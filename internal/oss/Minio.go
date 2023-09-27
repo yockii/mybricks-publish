@@ -50,7 +50,7 @@ func (o *Minio) Close() error {
 }
 
 func (o *Minio) PutObject(objName string, reader io.Reader) error {
-	_, err := o.Client.PutObject(context.Background(), o.Bucket, objName, reader, -1, minio.PutObjectOptions{})
+	_, err := o.Client.PutObject(context.Background(), o.Bucket, o.SubDir+objName, reader, -1, minio.PutObjectOptions{})
 	if err != nil {
 		logger.Error(err)
 		return err
@@ -59,7 +59,7 @@ func (o *Minio) PutObject(objName string, reader io.Reader) error {
 }
 
 func (o *Minio) GetObject(objName string) (io.ReadCloser, error) {
-	object, err := o.Client.GetObject(context.Background(), o.Bucket, objName, minio.GetObjectOptions{})
+	object, err := o.Client.GetObject(context.Background(), o.Bucket, o.SubDir+objName, minio.GetObjectOptions{})
 	if err != nil {
 		logger.Error(err)
 		return nil, err

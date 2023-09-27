@@ -25,7 +25,7 @@ func (p *FileProvider) Close() error {
 }
 
 func (p *FileProvider) PutObject(objName string, reader io.Reader) error {
-	fp := filepath.Join(p.Bucket, p.Region, objName)
+	fp := filepath.Join(p.Bucket, p.Region, p.SubDir, objName)
 	dir, _ := filepath.Split(fp)
 	if _, err := os.Stat(dir); err != nil && os.IsNotExist(err) {
 		err = os.MkdirAll(dir, os.ModePerm)
@@ -50,7 +50,7 @@ func (p *FileProvider) PutObject(objName string, reader io.Reader) error {
 
 func (p *FileProvider) GetObject(objName string) (io.ReadCloser, error) {
 	// 从本地读取
-	f, err := os.Open(filepath.Join(p.Bucket, p.Region, objName))
+	f, err := os.Open(filepath.Join(p.Bucket, p.Region, p.SubDir, objName))
 	if err != nil {
 		logger.Errorln(err)
 		return nil, err

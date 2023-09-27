@@ -10,6 +10,7 @@ type Application struct {
 	common.BaseModel
 	Name        string         `json:"name" gorm:"size:100;comment:应用名称"`
 	Description string         `json:"description" gorm:"size:1000;comment:应用描述"`
+	Domain      string         `json:"domain" gorm:"size:100;comment:应用域名"`
 	CreateTime  int64          `json:"createTime" gorm:"autoCreateTime:milli"`
 	UpdateTime  int64          `json:"updateTime" gorm:"autoUpdateTime:milli"`
 	DeleteTime  gorm.DeletedAt `json:"deleteTime,omitempty" gorm:"index"`
@@ -24,6 +25,7 @@ func (m *Application) UnmarshalJSON(b []byte) error {
 	m.ID = j.Get("id").Uint()
 	m.Name = j.Get("name").String()
 	m.Description = j.Get("description").String()
+	m.Domain = j.Get("domain").String()
 	m.CreateTime = j.Get("createTime").Int()
 	m.UpdateTime = j.Get("updateTime").Int()
 	return nil
@@ -50,7 +52,8 @@ func (u *Application) UpdateModel() common.Model {
 
 func (u *Application) FuzzyQueryMap() map[string]string {
 	return map[string]string{
-		"name": "%" + u.Name + "%",
+		"name":   "%" + u.Name + "%",
+		"domain": "%" + u.Domain + "%",
 	}
 }
 

@@ -40,7 +40,7 @@ func (o *OSS) Close() error {
 }
 
 func (o *OSS) PutObject(objName string, reader io.Reader) error {
-	err := o.Bucket.PutObject(objName, reader)
+	err := o.Bucket.PutObject(o.SubDir+objName, reader)
 	if err != nil {
 		logger.Error(err)
 		return err
@@ -49,7 +49,7 @@ func (o *OSS) PutObject(objName string, reader io.Reader) error {
 }
 
 func (o *OSS) GetObject(objName string) (io.ReadCloser, error) {
-	body, err := o.Bucket.GetObject(objName)
+	body, err := o.Bucket.GetObject(o.SubDir + objName)
 	if err != nil {
 		logger.Error(err)
 		return nil, err
