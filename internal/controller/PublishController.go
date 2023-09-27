@@ -19,11 +19,11 @@ import (
 )
 
 type publishController struct {
-	common.BaseController[*model.PublishInfo, *domain.PublishInfoDomain]
+	common.BaseController[*model.Page, *domain.PublishInfoDomain]
 }
 
-func (c *publishController) GetService() common.Service[*model.PublishInfo] {
-	return service.PublishService
+func (c *publishController) GetService() common.Service[*model.Page] {
+	return service.PageService
 }
 
 func (c *publishController) InitManage() {
@@ -133,85 +133,6 @@ func (c *publishController) ManateePublish(ctx *fiber.Ctx) error {
 		})
 	}
 
-	publishInfo := new(domain.PublishInfoDomain)
-	if err := ctx.BodyParser(publishInfo); err != nil {
-		logger.Errorln(err)
-		return ctx.JSON(&domain.ManateePublishResponse{
-			Code:    0,
-			Data:    domain.PublishData{},
-			Message: "发布集成参数解析失败, " + err.Error(),
-		})
-	}
-	publishContent := publishInfo.Content
-	saveInfo := publishInfo.PublishInfo
-	saveInfo.SchemaJson = publishContent.Json
-
-	//// 构建一个html的url
-	//urlPrefix := "/asset/"
-	//
-	//if err := database.DB.Transaction(func(tx *gorm.DB) error {
-	//	d, e := c.GetService().Add(&saveInfo, tx)
-	//	if e != nil {
-	//		return e
-	//	}
-	//	if d {
-	//		return errors.New("数据重复")
-	//	}
-	//
-	//	urlPrefix = fmt.Sprintf("/asset/%d/", saveInfo.ID)
-	//
-	//	// 保存html
-	//	htmlUrl := urlPrefix + "index.html"
-	//	d, e = service.AssetService.Add(&model.Asset{
-	//		Path: htmlUrl,
-	//	}, strings.NewReader(publishContent.Html))
-	//	if e != nil {
-	//		return e
-	//	}
-	//	if d {
-	//		return errors.New("数据重复")
-	//	}
-	//	// 保存html对应的js内容
-	//	for _, js := range publishContent.Js {
-	//		jsUrl := urlPrefix + js.Name
-	//		d, e = service.AssetService.Add(&model.Asset{
-	//			Path: jsUrl,
-	//		}, strings.NewReader(js.Content))
-	//		if e != nil {
-	//			return e
-	//		}
-	//		if d {
-	//			return errors.New("数据重复")
-	//		}
-	//	}
-	//	// 处理全局通用文件
-	//	for _, f := range publishContent.GlobalDeps {
-	//		filePath := f.Path
-	//		// 先查找是否存在
-	//		if service.AssetService.Count(filePath) > 0 {
-	//			continue
-	//		}
-	//
-	//		// 不存在则添加
-	//		d, e = service.AssetService.Add(&model.Asset{
-	//			Path: filePath,
-	//		}, strings.NewReader(f.Content))
-	//		if e != nil {
-	//			return e
-	//		}
-	//		if d {
-	//			return errors.New("数据重复")
-	//		}
-	//	}
-	//
-	//	return nil
-	//}); err != nil {
-	//	return ctx.JSON(&domain.ManateePublishResponse{
-	//		Code:    0,
-	//		Message: "发布失败: " + err.Error(),
-	//	})
-	//}
-
 	return ctx.JSON(&domain.ManateePublishResponse{
 		Code: 1,
 		Data: domain.PublishData{
@@ -290,7 +211,7 @@ func (c *publishController) CheckOriginAndCache(ctx *fiber.Ctx) error {
 
 func init() {
 	c := new(publishController)
-	c.BaseController = common.BaseController[*model.PublishInfo, *domain.PublishInfoDomain]{
+	c.BaseController = common.BaseController[*model.Page, *domain.PublishInfoDomain]{
 		Controller: c,
 	}
 
