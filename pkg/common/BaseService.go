@@ -135,6 +135,9 @@ func (s *BaseService[T]) List(condition T, paginate *server.Paginate[T], orderBy
 	for k, v := range fuzzyQueryMap {
 		tx = tx.Where(k+" like ?", v)
 	}
+	if condition.ListOmits() != "" {
+		tx = tx.Omit(condition.ListOmits())
+	}
 	err = tx.Find(&paginate.Items, condition.ExactMatchModel()).Offset(-1).Limit(-1).Count(&paginate.Total).Error
 	if err != nil {
 		logger.Errorln(err)

@@ -14,6 +14,7 @@ type Model interface {
 	FuzzyQueryMap() map[string]string
 	ExactMatchModel() Model
 	DeleteRequired() string
+	ListOmits() string
 }
 
 var Models []Model
@@ -65,4 +66,7 @@ func (m *BaseModel) FuzzyQueryMap() map[string]string {
 }
 func (m *BaseModel) ExactMatchModel() Model {
 	return m
+}
+func (m *BaseModel) ListOmits() string {
+	return ""
 }

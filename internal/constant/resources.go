@@ -71,62 +71,38 @@ const (
 	ResourceDictDetail = ResourceDict + ":detail"
 )
 
-// 字典管理
+// 路由管理
 const (
-	ResourceNotice = ResourceManage + ":notice"
+	ResourceRoute = ResourceManage + ":route"
 	// 增删改查
-	ResourceNoticeAdd    = ResourceNotice + ":add"
-	ResourceNoticeUpdate = ResourceNotice + ":update"
-	ResourceNoticeDelete = ResourceNotice + ":delete"
-	ResourceNoticeList   = ResourceNotice + ":list"
+	ResourceRouteAdd    = ResourceRoute + ":add"
+	ResourceRouteUpdate = ResourceRoute + ":update"
+	ResourceRouteDelete = ResourceRoute + ":delete"
+	ResourceRouteList   = ResourceRoute + ":list"
 	// 单个实例
-	ResourceNoticeDetail = ResourceNotice + ":detail"
+	ResourceRouteDetail = ResourceRoute + ":detail"
 )
 
-// 横幅管理
+// 应用管理
 const (
-	ResourceBanner = ResourceManage + ":banner"
+	ResourceApplication = ResourceManage + ":application"
 	// 增删改查
-	ResourceBannerAdd    = ResourceBanner + ":add"
-	ResourceBannerUpdate = ResourceBanner + ":update"
-	ResourceBannerDelete = ResourceBanner + ":delete"
-	ResourceBannerList   = ResourceBanner + ":list"
+	ResourceApplicationAdd    = ResourceApplication + ":add"
+	ResourceApplicationUpdate = ResourceApplication + ":update"
+	ResourceApplicationDelete = ResourceApplication + ":delete"
+	ResourceApplicationList   = ResourceApplication + ":list"
 	// 单个实例
-	ResourceBannerDetail = ResourceBanner + ":detail"
+	ResourceApplicationDetail = ResourceApplication + ":detail"
 )
 
-// 团队管理
+// oss配置管理
 const (
-	ResourceTeam = ResourceManage + ":team"
+	ResourceOssConfig = ResourceManage + ":ossConfig"
 	// 增删改查
-	ResourceTeamAdd    = ResourceTeam + ":add"
-	ResourceTeamUpdate = ResourceTeam + ":update"
-	ResourceTeamDelete = ResourceTeam + ":delete"
-	ResourceTeamList   = ResourceTeam + ":list"
+	ResourceOssConfigAdd    = ResourceOssConfig + ":add"
+	ResourceOssConfigUpdate = ResourceOssConfig + ":update"
+	ResourceOssConfigDelete = ResourceOssConfig + ":delete"
+	ResourceOssConfigList   = ResourceOssConfig + ":list"
 	// 单个实例
-	ResourceTeamDetail = ResourceTeam + ":detail"
-)
-
-// 评价管理
-const (
-	ResourceOpinion = ResourceManage + ":opinion"
-	// 增删改查
-	ResourceOpinionAdd    = ResourceOpinion + ":add"
-	ResourceOpinionUpdate = ResourceOpinion + ":update"
-	ResourceOpinionDelete = ResourceOpinion + ":delete"
-	ResourceOpinionList   = ResourceOpinion + ":list"
-	// 单个实例
-	ResourceOpinionDetail = ResourceOpinion + ":detail"
-)
-
-// 订单管理
-const (
-	ResourceOrder = ResourceManage + ":order"
-	// 增删改查
-	ResourceOrderAdd    = ResourceOrder + ":add"
-	ResourceOrderUpdate = ResourceOrder + ":update"
-	ResourceOrderDelete = ResourceOrder + ":delete"
-	ResourceOrderList   = ResourceOrder + ":list"
-	// 单个实例
-	ResourceOrderDetail = ResourceOrder + ":detail"
+	ResourceOssConfigDetail = ResourceOssConfig + ":detail"
 )

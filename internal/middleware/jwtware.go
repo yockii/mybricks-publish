@@ -83,7 +83,8 @@ func NeedAuthorization(codes ...string) fiber.Handler {
 					return c.Status(fiber.StatusUnauthorized).SendString("token信息已失效")
 				}
 				var roles []*model.Role
-				roles, err = service.UserService.Roles(userId, model.RoleTypeNormal) // 只加载普通角色
+				roles, err = service.UserService.Roles(userId)
+				//roles, err = service.UserService.Roles(userId, model.RoleTypeNormal) // 只加载普通角色
 				if err != nil {
 					return c.Status(fiber.StatusInternalServerError).SendString("系统错误")
 				}

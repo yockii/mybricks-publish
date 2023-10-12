@@ -1,3 +1,5 @@
+userTokenExpire=86400
+
 [server]
 port=32321
 prefix="http://192.168.1.117:32321"

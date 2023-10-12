@@ -6,8 +6,7 @@ import (
 )
 
 type PublishInfoDomain struct {
-	model.PublishInfo
-
+	model.Page
 	Content PublishContent `json:"content"`
 
 	CreateTimeCondition *server.TimeCondition `json:"createTimeCondition"`
@@ -45,8 +44,8 @@ type ContentPermission struct {
 	Remark string `json:"remark,omitempty"`
 }
 
-func (r *PublishInfoDomain) GetModel() *model.PublishInfo {
-	return &r.PublishInfo
+func (r *PublishInfoDomain) GetModel() *model.Page {
+	return &r.Page
 }
 
 func (r *PublishInfoDomain) GetOrderBy() string {

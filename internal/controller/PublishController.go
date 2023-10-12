@@ -29,12 +29,14 @@ func (c *publishController) GetService() common.Service[*model.Page] {
 func (c *publishController) InitManage() {
 	r := server.Group("/openapi/v1/publish")
 
-	r.Post("/manatee", c.ManateePublish)
+	r.Post("/mybricks", c.MyBricksPublish)
 
 	server.Get("/asset/+", c.CheckOriginAndCache, c.GetAsset)
 }
 
-func (c *publishController) ManateePublish(ctx *fiber.Ctx) error {
+// MyBricksPublish 从manatee发布的页面接收接口
+// 其发布的页面json数据如下
+func (c *publishController) MyBricksPublish(ctx *fiber.Ctx) error {
 	body := string(ctx.Body())
 	in := gjson.Parse(body)
 

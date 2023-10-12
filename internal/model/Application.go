@@ -51,10 +51,11 @@ func (u *Application) UpdateModel() common.Model {
 }
 
 func (u *Application) FuzzyQueryMap() map[string]string {
-	return map[string]string{
-		"name":   "%" + u.Name + "%",
-		"domain": "%" + u.Domain + "%",
+	result := make(map[string]string)
+	if u.Name != "" {
+		result["name"] = "%" + u.Name + "%"
 	}
+	return result
 }
 
 // ApplicationPage 应用与页面关联

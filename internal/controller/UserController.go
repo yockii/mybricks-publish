@@ -285,15 +285,15 @@ func (c *userController) Login(ctx *fiber.Ctx) error {
 	}
 
 	// 解析密码
-	if pwd, err := crypto.Sm2Decrypt(instance.Password); err != nil {
-		logger.Errorln(err)
-		return ctx.JSON(&server.CommonResponse{
-			Code: server.ResponseCodeParamParseError,
-			Msg:  server.ResponseMsgParamParseError + "密码不准确",
-		})
-	} else {
-		instance.Password = pwd
-	}
+	//if pwd, err := crypto.Sm2Decrypt(instance.Password); err != nil {
+	//	logger.Errorln(err)
+	//	return ctx.JSON(&server.CommonResponse{
+	//		Code: server.ResponseCodeParamParseError,
+	//		Msg:  server.ResponseMsgParamParseError + "密码不准确",
+	//	})
+	//} else {
+	//	instance.Password = pwd
+	//}
 
 	isStrong := util.PasswordStrengthCheck(8, 50, 4, instance.Password)
 	if !isStrong {

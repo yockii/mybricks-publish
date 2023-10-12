@@ -65,17 +65,28 @@ func (u *User) UpdateModel() common.Model {
 	}
 }
 func (u *User) FuzzyQueryMap() map[string]string {
-	return map[string]string{
-		"username": "%" + u.Username + "%",
-		"nickName": "%" + u.NickName + "%",
-		"email":    "%" + u.Email + "%",
-		"mobile":   "%" + u.Mobile + "%",
+	result := make(map[string]string)
+	if u.Username != "" {
+		result["username"] = "%" + u.Username + "%"
 	}
+	if u.NickName != "" {
+		result["nick_name"] = "%" + u.NickName + "%"
+	}
+	if u.Email != "" {
+		result["email"] = "%" + u.Email + "%"
+	}
+	if u.Mobile != "" {
+		result["mobile"] = "%" + u.Mobile + "%"
+	}
+	return result
 }
 func (u *User) ExactMatchModel() common.Model {
 	return &User{
 		Status: u.Status,
 	}
+}
+func (m *User) ListOmits() string {
+	return "password"
 }
 
 func init() {

@@ -8,8 +8,8 @@ import (
 
 type UserDomain struct {
 	model.User
-	OrderBy             string                `json:"orderBy"`
-	CreateTimeCondition *server.TimeCondition `json:"createTimeCondition"`
+	OrderBy             string                `json:"orderBy,omitempty"`
+	CreateTimeCondition *server.TimeCondition `json:"createTimeCondition,omitempty"`
 }
 
 func (d *UserDomain) GetOrderBy() string {
