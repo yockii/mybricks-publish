@@ -60,6 +60,17 @@ func (s *assetService) AddAsset(instance *model.Asset, reader io.Reader) (assetV
 		}
 	}
 
+	// 检查是否已有path重复，若有则取出
+	var asset *model.Asset
+	if err = database.DB.Where(&model.Asset{Path: instance.Path}).First(&asset).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			asset = nil
+		} else {
+			logger.Errorln(err)
+			return
+		}
+	}
+
 	suffix := instance.Path[strings.LastIndex(instance.Path, ".")+1:]
 
 	instance.ID = util.SnowflakeId()
@@ -75,9 +86,19 @@ func (s *assetService) AddAsset(instance *model.Asset, reader io.Reader) (assetV
 
 	assetVersionID = util.SnowflakeId()
 	if err = database.DB.Transaction(func(tx *gorm.DB) error {
-		if err = tx.Create(instance).Error; err != nil {
-			logger.Errorln(err)
-			return err
+		assetId := instance.ID
+		if asset == nil {
+			if err = tx.Create(instance).Error; err != nil {
+				logger.Errorln(err)
+				return err
+			}
+		} else {
+			assetId = asset.ID
+			// 更新asset记录中的objName
+			if err = tx.Model(&model.Asset{}).Where(&model.Asset{BaseModel: common.BaseModel{ID: assetId}}).Update("obj_name", objName).Error; err != nil {
+				logger.Errorln(err)
+				return err
+			}
 		}
 
 		// 添加文件版本信息
@@ -85,7 +106,7 @@ func (s *assetService) AddAsset(instance *model.Asset, reader io.Reader) (assetV
 			BaseModel: common.BaseModel{
 				ID: assetVersionID,
 			},
-			FileID:      instance.ID,
+			FileID:      assetId,
 			OssConfigID: s.osManager.GetOssConfigID(),
 			ObjName:     objName,
 		}).Error; err != nil {

@@ -27,7 +27,7 @@ onMounted(() => {
   if (loginContainer.value) {
     loginApp.value = loadMicroApp({
       name: 'login',
-      entry: 'asset/12877708147556352/index.html',
+      entry: 'asset/12877708147556352/prod/index.html',
       container: loginContainer.value,
     }
     )

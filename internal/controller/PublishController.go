@@ -74,7 +74,7 @@ func (c *publishController) MyBricksPublish(ctx *fiber.Ctx) error {
 		// 存储文件内容
 		{
 			// 存储html
-			htmlUrl := fmt.Sprintf("/asset/%d/index.html", page.ID)
+			htmlUrl := fmt.Sprintf("/asset/%d/%s/index.html", page.ID, pageVersion.Env)
 			pageVersion.AssetVersionID, e = service.AssetService.AddAsset(&model.Asset{
 				Path: htmlUrl,
 			}, strings.NewReader(in.Get("content.html").String()))
@@ -85,7 +85,7 @@ func (c *publishController) MyBricksPublish(ctx *fiber.Ctx) error {
 			// 存储对应的js
 			jsList := in.Get("content.js").Array()
 			for _, js := range jsList {
-				jsUrl := fmt.Sprintf("/asset/%d/%s", page.ID, js.Get("name").String())
+				jsUrl := fmt.Sprintf("/asset/%d/%s/%s", page.ID, pageVersion.Env, js.Get("name").String())
 				_, e = service.AssetService.AddAsset(&model.Asset{
 					Path: jsUrl,
 				}, strings.NewReader(js.Get("content").String()))
@@ -139,7 +139,7 @@ func (c *publishController) MyBricksPublish(ctx *fiber.Ctx) error {
 		Code: 1,
 		Data: domain.PublishData{
 			//config.GetString("server.prefix") + "/asset/" + page.ID + "index.html",
-			Url: fmt.Sprintf("%s/asset/%d/index.html", config.GetString("server.prefix"), page.ID),
+			Url: fmt.Sprintf("%s/asset/%d/%s/index.html", config.GetString("server.prefix"), page.ID, pageVersion.Env),
 		},
 		Message: "发布成功",
 	})
@@ -196,7 +196,6 @@ func (c *publishController) CheckOriginAndCache(ctx *fiber.Ctx) error {
 				// 禁止跨域访问
 				return ctx.SendStatus(fiber.StatusForbidden)
 			}
-
 		}
 	}
 	ctx.Response().Header.Set(fiber.HeaderAccessControlAllowOrigin, origin)
