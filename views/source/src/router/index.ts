@@ -18,7 +18,7 @@ const router = createRouter({
     routes
 })
 
-router.beforeEach((to, from, next) => {
+router.beforeEach((to, _, next) => {
     const userStore = useUserStore()
     if (to.path !== "/login" && to.path !== '/auth' && !userStore.isLogin) {
         sessionStorage.setItem("redirect", to.path)

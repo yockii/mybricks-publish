@@ -24,10 +24,10 @@ onMounted(() => {
   if (!window.logined) {
     window.logined = logined
   }
-  if (loginContainer) {
+  if (loginContainer.value) {
     loginApp.value = loadMicroApp({
       name: 'login',
-      entry: 'http://192.168.1.8/mfs/app/pcpage/dev/483218718658629.html',
+      entry: 'asset/12877708147556352/index.html',
       container: loginContainer.value,
     }
     )

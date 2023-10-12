@@ -2,7 +2,7 @@
 import {onMounted, ref} from "vue";
 import {useUserStore} from "../store/user";
 import router from "../router";
-import {loadMicroApp, MicroApp, registerMicroApps, start} from "qiankun";
+import {loadMicroApp, MicroApp} from "qiankun";
 import {useRoute} from "vue-router";
 
 const route = useRoute()
