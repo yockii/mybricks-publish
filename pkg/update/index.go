@@ -33,12 +33,14 @@ func SelfUpdate(github string, version string) {
 	latest, err := lastVersion()
 	if err != nil {
 		logger.Warnf("获取最新版本失败: %v \n", err)
-		wait()
+		//wait()
+		return
 	}
 	url := fmt.Sprintf("%v/yockii/mybricks-publish/releases/download/%v/%v", github, latest, binaryName(latest))
 	if version == latest {
 		logger.Infoln("当前版本已经是最新版本!")
-		wait()
+		//wait()
+		return
 	}
 	logger.Infoln("当前最新版本为 ", latest)
 	logger.Infoln("正在更新,请稍等...")
