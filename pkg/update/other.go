@@ -6,7 +6,6 @@ package update
 import (
 	"archive/tar"
 	"bytes"
-	"compress/gzip"
 	"crypto/sha256"
 	"errors"
 	"io"
@@ -29,11 +28,12 @@ func update(url string, sum []byte) error {
 	if !bytes.Equal(wc.hash.Sum(nil), sum) {
 		return errors.New("文件已损坏")
 	}
-	gr, err := gzip.NewReader(bytes.NewReader(rsp))
-	if err != nil {
-		return err
-	}
-	tr := tar.NewReader(gr)
+	//gr, err := gzip.NewReader(bytes.NewReader(rsp))
+	//if err != nil {
+	//	return err
+	//}
+	//tr := tar.NewReader(gr)
+	tr := tar.NewReader(bytes.NewReader(rsp))
 	for {
 		header, err := tr.Next()
 		if err != nil {

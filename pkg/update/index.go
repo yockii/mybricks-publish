@@ -35,7 +35,7 @@ func SelfUpdate(github string, version string) {
 		logger.Warnf("获取最新版本失败: %v \n", err)
 		wait()
 	}
-	url := fmt.Sprintf("%v/yockii/mybricks-publish/releases/download/%v/%v", github, latest, binaryName())
+	url := fmt.Sprintf("%v/yockii/mybricks-publish/releases/download/%v/%v", github, latest, binaryName(latest))
 	if version == latest {
 		logger.Infoln("当前版本已经是最新版本!")
 		wait()
@@ -55,36 +55,41 @@ func SelfUpdate(github string, version string) {
 	}
 }
 func checksum(github, version string) []byte {
-	sumURL := fmt.Sprintf("%v/yockii/mybricks-publish/releases/download/%v/mybricks-publish_checksums.txt", github, version)
+	sumURL := fmt.Sprintf("%v/yockii/mybricks-publish/releases/download/%v/checksums.txt", github, version)
 	response, err := http.Get(sumURL)
 	if err != nil {
 		return nil
 	}
 	rd := bufio.NewReader(response.Body)
+	binName := binaryName(version)
 	for {
 		str, err := rd.ReadString('\n')
 		if err != nil {
 			break
 		}
 		str = strings.TrimSpace(str)
-		if strings.HasSuffix(str, binaryName()) {
-			sum, _ := hex.DecodeString(strings.TrimSuffix(str, "  "+binaryName()))
+		if strings.HasSuffix(str, binName) {
+			sum, _ := hex.DecodeString(strings.TrimSuffix(str, "  "+binName))
 			return sum
 		}
 	}
 	return nil
 }
 
-func binaryName() string {
+func binaryName(version string) string {
 	goarch := runtime.GOARCH
 	if goarch == "arm" {
 		goarch += "v7"
 	}
-	ext := "tar.gz"
+	ext := ""
 	if runtime.GOOS == "windows" {
-		ext = "zip"
+		ext = ".exe"
 	}
-	return fmt.Sprintf("mybricks-publish_%v_%v.%v", runtime.GOOS, goarch, ext)
+	v := version
+	if strings.HasPrefix(v, "v") {
+		v = v[1:]
+	}
+	return fmt.Sprintf("manatee-publish_%s_%v_%v%v", v, runtime.GOOS, goarch, ext)
 }
 
 func wait() {
