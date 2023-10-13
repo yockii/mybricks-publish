@@ -44,6 +44,7 @@ func (c *publishController) MyBricksPublish(ctx *fiber.Ctx) error {
 	page.ProductID = in.Get("productId").Int()
 	page.Name = in.Get("productName").String()
 	page.Type = in.Get("type").String()
+	page.GroupName = in.Get("groupName").String()
 	//page.PageVersionID
 
 	pageVersion := new(model.PageVersion)
@@ -63,10 +64,19 @@ func (c *publishController) MyBricksPublish(ctx *fiber.Ctx) error {
 		}
 		if d {
 			// 已有，则获取
-			page, e = service.PageService.Instance(&model.Page{ProductID: page.ProductID})
-			if e != nil {
-				return e
+			oldPage, err := service.PageService.Instance(&model.Page{ProductID: page.ProductID})
+			if err != nil {
+				return err
 			}
+
+			if oldPage.GroupName != page.GroupName {
+				// 如果group不同，则更新group
+				_, err = service.PageService.Update(&model.Page{BaseModel: common.BaseModel{ID: oldPage.ID}, GroupName: page.GroupName}, tx)
+				if err != nil {
+					return err
+				}
+			}
+			page = oldPage
 		}
 		// page存储完成
 		pageVersion.PageID = page.ID

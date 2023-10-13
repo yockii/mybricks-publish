@@ -10,6 +10,7 @@ type Page struct {
 	common.BaseModel
 	ProductID     int64  `json:"productId,omitempty" gorm:"comment:页面ID,对应传入的productId"`
 	Name          string `json:"name,omitempty" gorm:"size:255;comment:页面名称"`
+	GroupName     string `json:"groupName,omitempty" gorm:"size:255;comment:协作组组名称"`
 	Type          string `json:"type,omitempty" gorm:"size:20;comment:页面类型"`
 	PageVersionID uint64 `json:"pageVersionId,omitempty" gorm:"comment:页面版本ID"`
 	CreateTime    int64  `json:"createTime" gorm:"autoCreateTime:milli"`
@@ -25,6 +26,7 @@ func (m *Page) UnmarshalJSON(b []byte) error {
 	m.ID = j.Get("id").Uint()
 	m.ProductID = j.Get("productId").Int()
 	m.Name = j.Get("name").String()
+	m.GroupName = j.Get("groupName").String()
 	m.Type = j.Get("type").String()
 	m.PageVersionID = j.Get("pageVersionId").Uint()
 	m.CreateTime = j.Get("createTime").Int()
@@ -56,6 +58,7 @@ func (m *Page) UpdateModel() common.Model {
 	return &Page{
 		ProductID:     m.ProductID,
 		Name:          m.Name,
+		GroupName:     m.GroupName,
 		Type:          m.Type,
 		PageVersionID: m.PageVersionID,
 	}
@@ -65,6 +68,9 @@ func (m *Page) FuzzyQueryMap() map[string]string {
 	result := make(map[string]string)
 	if m.Name != "" {
 		result["name"] = "%" + m.Name + "%"
+	}
+	if m.GroupName != "" {
+		result["group_name"] = "%" + m.GroupName + "%"
 	}
 	return result
 }
