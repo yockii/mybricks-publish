@@ -194,8 +194,11 @@ func (c *publishController) CheckOriginAndCache(ctx *fiber.Ctx) error {
 	// path如果是index.html，则检查origin对应的应用是否允许访问path
 	if strings.HasSuffix(path, "index.html") {
 		if origin != "" {
-			// 从path中解析出pageId
-			pageIdStr := path[strings.Index(path, "/asset/")+7 : strings.Index(path, "/index.html")]
+			// 从path中解析出pageId, 路径为： /asset/{pageId}/{env}/index.html 或者 /asset/{pageId}/index.html
+			pageIdStr := path[strings.Index(path, "/asset/")+7:]
+			if strings.Contains(pageIdStr, "/") {
+				pageIdStr = pageIdStr[:strings.Index(pageIdStr, "/")]
+			}
 			pageId, err := strconv.ParseUint(pageIdStr, 10, 64)
 			if err != nil {
 				logger.Errorln(err)
