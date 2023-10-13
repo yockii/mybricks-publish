@@ -1,25 +1,25 @@
-userTokenExpire=86400
+userTokenExpire = 86400
 
 [server]
-port=32321
-prefix="http://192.168.1.117:32321"
+port = 32321
+prefix = "http://192.168.1.117:32321"
 
 [database]
-driver="mysql"
-host="localhost"
-user="root"
-password="root"
-db="manatee_publish"
-port=3306
-prefix="t_"
-showSql=true
+driver = "mysql"
+host = "localhost"
+user = "root"
+password = "root"
+db = "manatee_publish"
+port = 3306
+prefix = "t_"
+showSql = true
 
 [logger]
-level="debug"
+level = "debug"
 
 [redis]
-host="localhost"
-port=6379
-password=""
-db=0
-app="manatee_publish"
+host = "localhost"
+port = 6379
+password = ""
+db = 0
+app = "manatee_publish"
