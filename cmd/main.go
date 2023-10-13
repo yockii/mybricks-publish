@@ -9,7 +9,6 @@ import (
 	"manatee-publish/pkg/database"
 	"manatee-publish/pkg/server"
 	"manatee-publish/pkg/task"
-	"manatee-publish/pkg/update"
 	"manatee-publish/pkg/util"
 )
 
@@ -17,10 +16,6 @@ var VERSION = "unknown"
 
 func main() {
 	defer ants.Release()
-
-	ants.Submit(func() {
-		update.SelfUpdate("", VERSION)
-	})
 
 	config.InitialLogger()
 
