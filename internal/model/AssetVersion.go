@@ -10,6 +10,7 @@ type AssetVersion struct {
 	common.BaseModel
 	FileID      uint64         `json:"fileId,omitempty,string" gorm:"index;comment:文件ID"`
 	OssConfigID uint64         `json:"ossConfigId,omitempty,string" gorm:"comment:OSS配置ID"`
+	Version     string         `json:"version" gorm:"size:20;comment:版本号"`
 	ObjName     string         `json:"objName,omitempty" gorm:"size:200;comment:存储的对象名称"`
 	CreateTime  int64          `json:"createTime" gorm:"autoCreateTime:milli"`
 	DeleteTime  gorm.DeletedAt `json:"deleteTime,omitempty" gorm:"index"`
@@ -24,6 +25,7 @@ func (af *AssetVersion) UnmarshalJSON(b []byte) error {
 	af.ID = j.Get("id").Uint()
 	af.FileID = j.Get("fileId").Uint()
 	af.OssConfigID = j.Get("ossConfigId").Uint()
+	af.Version = j.Get("version").String()
 	af.ObjName = j.Get("objName").String()
 	af.CreateTime = j.Get("createTime").Int()
 	return nil

@@ -49,7 +49,7 @@ func (s *assetService) initOsManager() (err error) {
 }
 
 // AddAsset 添加资源
-func (s *assetService) AddAsset(instance *model.Asset, reader io.Reader) (assetVersionID uint64, err error) {
+func (s *assetService) AddAsset(instance *model.Asset, version string, reader io.Reader) (assetVersionID uint64, err error) {
 	if instance.Path == "" {
 		err = errors.New("Path is required ")
 		return
@@ -109,6 +109,7 @@ func (s *assetService) AddAsset(instance *model.Asset, reader io.Reader) (assetV
 			},
 			FileID:      assetId,
 			OssConfigID: s.osManager.GetOssConfigID(),
+			Version:     version,
 			ObjName:     objName,
 		}).Error; err != nil {
 			logger.Errorln(err)
@@ -128,7 +129,7 @@ func (s *assetService) Count(path string) int64 {
 	return count
 }
 
-func (s *assetService) Download(path string) (reader io.ReadCloser, err error) {
+func (s *assetService) Download(path, version string) (reader io.ReadCloser, err error) {
 	// 根据path获取文件信息
 	instance := &model.Asset{}
 	if err = database.DB.Where(&model.Asset{Path: path}).First(instance).Error; err != nil {
@@ -141,5 +142,17 @@ func (s *assetService) Download(path string) (reader io.ReadCloser, err error) {
 			return
 		}
 	}
-	return s.osManager.GetObject(instance.ObjName)
+	if version == "" {
+		return s.osManager.GetObject(instance.ObjName)
+	} else {
+		// 如果有版本，则要从assetVersion中获取
+		assetVersion := &model.AssetVersion{}
+		assetVersion.FileID = instance.ID
+		assetVersion.Version = version
+		if err = database.DB.Where(assetVersion).First(assetVersion).Error; err != nil {
+			logger.Errorln(err)
+			return
+		}
+		return s.osManager.GetObject(assetVersion.ObjName)
+	}
 }

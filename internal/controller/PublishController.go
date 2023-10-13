@@ -87,7 +87,7 @@ func (c *publishController) MyBricksPublish(ctx *fiber.Ctx) error {
 			htmlUrl := fmt.Sprintf("/asset/%d/%s/index.html", page.ID, pageVersion.Env)
 			pageVersion.AssetVersionID, e = service.AssetService.AddAsset(&model.Asset{
 				Path: htmlUrl,
-			}, strings.NewReader(in.Get("content.html").String()))
+			}, pageVersion.Version, strings.NewReader(in.Get("content.html").String()))
 			if e != nil {
 				return e
 			}
@@ -98,7 +98,7 @@ func (c *publishController) MyBricksPublish(ctx *fiber.Ctx) error {
 				jsUrl := fmt.Sprintf("/asset/%d/%s/%s", page.ID, pageVersion.Env, js.Get("name").String())
 				_, e = service.AssetService.AddAsset(&model.Asset{
 					Path: jsUrl,
-				}, strings.NewReader(js.Get("content").String()))
+				}, pageVersion.Version, strings.NewReader(js.Get("content").String()))
 				if e != nil {
 					return e
 				}
@@ -115,7 +115,7 @@ func (c *publishController) MyBricksPublish(ctx *fiber.Ctx) error {
 				// 不存在则添加
 				_, e = service.AssetService.AddAsset(&model.Asset{
 					Path: filePath,
-				}, strings.NewReader(f.Get("content").String()))
+				}, "", strings.NewReader(f.Get("content").String()))
 				if e != nil {
 					return e
 				}
@@ -149,7 +149,7 @@ func (c *publishController) MyBricksPublish(ctx *fiber.Ctx) error {
 		Code: 1,
 		Data: domain.PublishData{
 			//config.GetString("server.prefix") + "/asset/" + page.ID + "index.html",
-			Url: fmt.Sprintf("%s/asset/%d/%s/index.html", config.GetString("server.prefix"), page.ID, pageVersion.Env),
+			Url: fmt.Sprintf("%s/asset/%d/%s/index.html?v=%s", config.GetString("server.prefix"), page.ID, pageVersion.Env, pageVersion.Version),
 		},
 		Message: "发布成功",
 	})
@@ -157,6 +157,7 @@ func (c *publishController) MyBricksPublish(ctx *fiber.Ctx) error {
 
 func (c *publishController) GetAsset(ctx *fiber.Ctx) error {
 	path := ctx.Path()
+	version := ctx.Query("v")
 	// 查找是否存在该资产记录
 	if service.AssetService.Count(path) == 0 {
 		// 如果有 public/ 但是 /asset/ 与 public/ 之间还有其他字符串，则重定向到 /asset/public/xxxxx
@@ -172,7 +173,7 @@ func (c *publishController) GetAsset(ctx *fiber.Ctx) error {
 		}
 	}
 	// 从oss中读取文件内容并返回
-	content, err := service.AssetService.Download(path)
+	content, err := service.AssetService.Download(path, version)
 	if err != nil {
 		return ctx.SendStatus(fiber.StatusInternalServerError)
 	}
