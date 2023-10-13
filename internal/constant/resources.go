@@ -106,3 +106,51 @@ const (
 	// 单个实例
 	ResourceOssConfigDetail = ResourceOssConfig + ":detail"
 )
+
+// 页面管理
+const (
+	ResourcePage = ResourceManage + ":page"
+	// 增删改查
+	ResourcePageAdd    = ResourcePage + ":add"
+	ResourcePageUpdate = ResourcePage + ":update"
+	ResourcePageDelete = ResourcePage + ":delete"
+	ResourcePageList   = ResourcePage + ":list"
+	// 单个实例
+	ResourcePageDetail = ResourcePage + ":detail"
+)
+
+// 资产管理
+const (
+	ResourceAsset = ResourceManage + ":asset"
+	// 增删改查
+	ResourceAssetAdd    = ResourceAsset + ":add"
+	ResourceAssetUpdate = ResourceAsset + ":update"
+	ResourceAssetDelete = ResourceAsset + ":delete"
+	ResourceAssetList   = ResourceAsset + ":list"
+	// 单个实例
+	ResourceAssetDetail = ResourceAsset + ":detail"
+)
+
+// 页面版本管理
+const (
+	ResourcePageVersion = ResourceManage + ":pageVersion"
+	// 增删改查
+	ResourcePageVersionAdd    = ResourcePageVersion + ":add"
+	ResourcePageVersionUpdate = ResourcePageVersion + ":update"
+	ResourcePageVersionDelete = ResourcePageVersion + ":delete"
+	ResourcePageVersionList   = ResourcePageVersion + ":list"
+	// 单个实例
+	ResourcePageVersionDetail = ResourcePageVersion + ":detail"
+)
+
+// 资产版本管理
+const (
+	ResourceAssetVersion = ResourceManage + ":assetVersion"
+	// 增删改查
+	ResourceAssetVersionAdd    = ResourceAssetVersion + ":add"
+	ResourceAssetVersionUpdate = ResourceAssetVersion + ":update"
+	ResourceAssetVersionDelete = ResourceAssetVersion + ":delete"
+	ResourceAssetVersionList   = ResourceAssetVersion + ":list"
+	// 单个实例
+	ResourceAssetVersionDetail = ResourceAssetVersion + ":detail"
+)

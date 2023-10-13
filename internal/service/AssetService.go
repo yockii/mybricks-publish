@@ -21,6 +21,7 @@ var AssetService = &assetService{
 }
 
 type assetService struct {
+	common.BaseService[*model.Asset]
 	osManager provider.OsManager
 	locker    sync.Locker
 }
