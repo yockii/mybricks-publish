@@ -10,6 +10,8 @@ builds:
   - id: "manatee-publish"
     main: ./cmd/main.go
     binary: manatee-publish
+    ldflags:
+      - -s -w -X main.VERSION=v{{.Version}}
     env:
       - CGO_ENABLED=0
     goos:
@@ -25,12 +27,7 @@ archives:
     builds:
       - "manatee-publish"
     format: binary
-    replacements:
-      darwin: Darwin
-      linux: Linux
-      windows: Windows
-      386: i386
-      amd64: x86_64
+
 checksum:
   name_template: 'checksums.txt'
 snapshot:

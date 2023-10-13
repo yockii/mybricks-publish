@@ -4,12 +4,14 @@ go 1.21
 
 require (
 	github.com/aliyun/aliyun-oss-go-sdk v2.2.9+incompatible
+	github.com/dustin/go-humanize v1.0.1
 	github.com/gofiber/fiber/v2 v2.49.2
 	github.com/gofiber/jwt/v2 v2.2.7
 	github.com/gofiber/template/html/v2 v2.0.5
 	github.com/golang-jwt/jwt/v4 v4.5.0
 	github.com/gomodule/redigo v1.8.9
 	github.com/huaweicloud/huaweicloud-sdk-go-obs v3.23.9+incompatible
+	github.com/kardianos/osext v0.0.0-20190222173326-2bc1f35cddc0
 	github.com/lestrrat/go-file-rotatelogs v0.0.0-20180223000712-d3151e2a480f
 	github.com/minio/minio-go/v7 v7.0.63
 	github.com/panjf2000/ants/v2 v2.8.2
@@ -30,7 +32,6 @@ require (
 
 require (
 	github.com/andybalholm/brotli v1.0.5 // indirect
-	github.com/dustin/go-humanize v1.0.1 // indirect
 	github.com/fastly/go-utils v0.0.0-20180712184237-d95a45783239 // indirect
 	github.com/fsnotify/fsnotify v1.6.0 // indirect
 	github.com/go-sql-driver/mysql v1.7.1 // indirect
