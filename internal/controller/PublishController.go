@@ -14,6 +14,8 @@ import (
 	"manatee-publish/pkg/config"
 	"manatee-publish/pkg/database"
 	"manatee-publish/pkg/server"
+	"manatee-publish/pkg/util"
+	"mime/multipart"
 	"strconv"
 	"strings"
 )
@@ -29,6 +31,7 @@ func (c *publishController) GetService() common.Service[*model.Page] {
 func (c *publishController) InitManage() {
 	r := server.Group("/openapi/v1/publish")
 
+	r.Post("/upload/mybricks", c.MyBricksUpload)
 	r.Post("/mybricks", c.MyBricksPublish)
 
 	server.Get("/asset/+", c.CheckOriginAndCache, c.GetAsset)
@@ -184,6 +187,16 @@ func (c *publishController) GetAsset(ctx *fiber.Ctx) error {
 		ctx.Response().Header.SetContentType("application/javascript")
 	} else if strings.HasSuffix(path, ".css") {
 		ctx.Response().Header.SetContentType("text/css")
+	} else if strings.HasSuffix(path, ".png") { // 各种图片格式
+		ctx.Response().Header.SetContentType("image/png")
+	} else if strings.HasSuffix(path, ".jpg") || strings.HasSuffix(path, ".jpeg") {
+		ctx.Response().Header.SetContentType("image/jpeg")
+	} else if strings.HasSuffix(path, ".gif") {
+		ctx.Response().Header.SetContentType("image/gif")
+	} else if strings.HasSuffix(path, ".svg") {
+		ctx.Response().Header.SetContentType("image/svg+xml")
+	} else if strings.HasSuffix(path, ".ico") {
+		ctx.Response().Header.SetContentType("image/x-icon")
 	}
 
 	return ctx.SendStream(content)
@@ -222,6 +235,47 @@ func (c *publishController) CheckOriginAndCache(ctx *fiber.Ctx) error {
 
 	}
 	return err
+}
+
+func (c *publishController) MyBricksUpload(ctx *fiber.Ctx) error {
+	mf, err := ctx.MultipartForm()
+	if err != nil {
+		return ctx.JSON(&domain.ManateePublishResponse{
+			Code:    0,
+			Message: "上传失败: " + err.Error(),
+		})
+	}
+
+	var result []string
+	// 从表单中获取文件
+	fhList := mf.File["file"]
+	for _, fh := range fhList {
+		uniStr := util.GenerateXid()
+		path := fmt.Sprintf("/asset/%s/%s", uniStr, fh.Filename)
+		var file multipart.File
+		file, err = fh.Open()
+		if err != nil {
+			return ctx.JSON(&domain.ManateePublishResponse{
+				Code:    0,
+				Message: "上传失败: " + err.Error(),
+			})
+		}
+		// 将文件存储到oss中
+		_, err = service.AssetService.AddAsset(&model.Asset{
+			Path: path,
+		}, "0.0.0", file)
+		if err != nil {
+			return err
+		}
+
+		result = append(result, path)
+	}
+
+	return ctx.JSON(fiber.Map{
+		"code": 1,
+		"data": result,
+	})
+
 }
 
 func init() {
