@@ -2,12 +2,12 @@ package server
 
 import (
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/template/html/v2"
 	"manatee-publish/pkg/config"
 	"manatee-publish/pkg/database"
 	"net"
 
-	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/recover"
 	logger "github.com/sirupsen/logrus"
 )
@@ -61,7 +61,12 @@ func InitWebApp(views fiber.Views) *WebApp {
 			logger.Error(e)
 		},
 	}))
-	app.Use(cors.New())
+	app.Use(cors.New(cors.Config{
+		AllowOriginsFunc: func(origin string) bool {
+			return true
+		},
+		AllowCredentials: true,
+	}))
 
 	return &WebApp{app}
 }
