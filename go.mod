@@ -4,7 +4,7 @@ go 1.21
 
 require (
 	github.com/aliyun/aliyun-oss-go-sdk v2.2.9+incompatible
-	github.com/gofiber/fiber/v2 v2.49.2
+	github.com/gofiber/fiber/v2 v2.50.0
 	github.com/gofiber/jwt/v2 v2.2.7
 	github.com/gofiber/template/html/v2 v2.0.5
 	github.com/golang-jwt/jwt/v4 v4.5.0
@@ -74,7 +74,7 @@ require (
 	github.com/tidwall/match v1.1.1 // indirect
 	github.com/tidwall/pretty v1.2.0 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
-	github.com/valyala/fasthttp v1.49.0 // indirect
+	github.com/valyala/fasthttp v1.50.0 // indirect
 	github.com/valyala/tcplisten v1.0.0 // indirect
 	go.uber.org/atomic v1.9.0 // indirect
 	go.uber.org/multierr v1.9.0 // indirect
