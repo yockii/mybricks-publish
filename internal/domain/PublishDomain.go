@@ -61,10 +61,15 @@ func (r *PublishInfoDomain) GetTimeConditionList() map[string]*server.TimeCondit
 
 type ManateePublishResponse struct {
 	Code    int         `json:"code,omitempty"` // 成功1，失败0
-	Data    PublishData `json:"data"`
+	Data    interface{} `json:"data"`
 	Message string      `json:"message,omitempty"` // 自定义内容
 }
 
 type PublishData struct {
 	Url string `json:"url,omitempty"`
+}
+
+type UploadData struct {
+	SubPath string `json:"subPath,omitempty"`
+	Url     string `json:"url,omitempty"`
 }

@@ -16,6 +16,7 @@ import (
 	"manatee-publish/pkg/server"
 	"manatee-publish/pkg/util"
 	"mime/multipart"
+	"net/url"
 	"strconv"
 	"strings"
 )
@@ -203,11 +204,11 @@ func (c *publishController) GetAsset(ctx *fiber.Ctx) error {
 }
 
 func (c *publishController) CheckOriginAndCache(ctx *fiber.Ctx) error {
-	origin := ctx.GetReqHeaders()[fiber.HeaderOrigin]
+	originArray := ctx.GetReqHeaders()[fiber.HeaderOrigin]
 	path := ctx.Path()
 	// path如果是index.html，则检查origin对应的应用是否允许访问path
 	if strings.HasSuffix(path, "index.html") {
-		if origin != "" {
+		if len(originArray) > 0 && originArray[0] != "" {
 			// 从path中解析出pageId, 路径为： /asset/{pageId}/{env}/index.html 或者 /asset/{pageId}/index.html
 			pageIdStr := path[strings.Index(path, "/asset/")+7:]
 			if strings.Contains(pageIdStr, "/") {
@@ -219,13 +220,14 @@ func (c *publishController) CheckOriginAndCache(ctx *fiber.Ctx) error {
 				return ctx.SendStatus(fiber.StatusNotFound)
 			}
 			// 检查origin对应的应用是否允许访问path
-			if !service.ApplicationService.CheckOrigin(pageId, origin) {
+			if !service.ApplicationService.CheckOrigin(pageId, originArray[0]) {
 				// 禁止跨域访问
 				return ctx.SendStatus(fiber.StatusForbidden)
 			}
+
+			ctx.Response().Header.Set(fiber.HeaderAccessControlAllowOrigin, originArray[0])
 		}
 	}
-	ctx.Response().Header.Set(fiber.HeaderAccessControlAllowOrigin, origin)
 	ctx.Response().Header.Set(fiber.HeaderAccessControlAllowCredentials, "true")
 	err := ctx.Next()
 	if err == nil {
@@ -246,12 +248,14 @@ func (c *publishController) MyBricksUpload(ctx *fiber.Ctx) error {
 		})
 	}
 
-	var result []string
 	// 从表单中获取文件
 	fhList := mf.File["file"]
-	for _, fh := range fhList {
-		uniStr := util.GenerateXid()
-		path := fmt.Sprintf("/asset/%s/%s", uniStr, fh.Filename)
+	uniStr := util.GenerateXid()
+	path := ""
+	if len(fhList) > 0 {
+		fh := fhList[0]
+		path = fmt.Sprintf("/asset/%s/%s", uniStr, url.QueryEscape(fh.Filename))
+
 		var file multipart.File
 		file, err = fh.Open()
 		if err != nil {
@@ -267,15 +271,16 @@ func (c *publishController) MyBricksUpload(ctx *fiber.Ctx) error {
 		if err != nil {
 			return err
 		}
-
-		result = append(result, path)
 	}
 
-	return ctx.JSON(fiber.Map{
-		"code": 1,
-		"data": result,
+	return ctx.JSON(&domain.ManateePublishResponse{
+		Code: 1,
+		Data: &domain.UploadData{
+			SubPath: path,
+			Url:     config.GetString("server.prefix") + path,
+		},
+		Message: "上传成功",
 	})
-
 }
 
 func init() {
